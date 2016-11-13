@@ -1,0 +1,47 @@
+<ion-view view-title="Compose">
+  <ion-contentn class="has-tabs">
+  	<br><br>
+	<div class="list">
+		<br>
+		<div class="padding">
+			<label>Please select the email of the person that you want to contact.</label>
+		</div>
+		<label class="item item-input item-select">
+			<div class="input-label">
+			Email
+			</div>
+			<select>
+				<option>markganzonlalata@gmail.com</option>
+				<option selected>Green</option>
+				<option>Red</option>
+			</select>
+		</label>
+		<ion-item>
+			<ion-label>Message</ion-label>
+			<textarea cols="50" rows="8" style="resize:none"></textarea>
+		</ion-item>
+	</div>
+	<div class="padding">
+		<button class="button button-energized button-full">
+		  Send Message
+		</button>
+	</div>
+
+	  <div class="tabs-striped tabs-icon-top tabs-color-balanced ">
+	    <div class="tabs">
+	      <a class="tab-item" href="#/app/messages">
+	        <i class="icon ion-chatboxes"></i>
+	        INBOX
+	      </a>
+	      <a class="tab-item" href="#/app/messages_outbox">
+	        <i class="icon ion-paper-airplane"></i>
+	        OUTBOX
+	      </a>
+	      <a class="tab-item active" href="#/app/messages_compose">
+	        <i class="icon ion-compose"></i>
+	        COMPOSE
+	      </a>
+	    </div>
+	  </div>
+  </ion-content>
+</ion-view>
