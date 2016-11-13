@@ -85,6 +85,33 @@ angular.module('starter', ['ionic', 'starter.controllers'])
     }
   })
 
+    .state('app.messages_outbox', {
+    url: '/messages_outbox',
+    views: {
+      'menuContent': {
+        templateUrl: 'templates/app_messages_outbox.html'
+      }
+    }
+  })
+
+    .state('app.messages_compose', {
+    url: '/messages_compose',
+    views: {
+      'menuContent': {
+        templateUrl: 'templates/app_messages_compose.html'
+      }
+    }
+  })
+    
+    .state('app.events', {
+    url: '/events',
+    views: {
+      'menuContent': {
+        templateUrl: 'templates/app_events.html'
+      }
+    }
+  })
+
   .state('app.browse', {
       url: '/browse',
       views: {
