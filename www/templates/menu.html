@@ -3,7 +3,6 @@
     <ion-nav-bar class="bar-balanced">
       <ion-nav-back-button>
       </ion-nav-back-button>
-
       <ion-nav-buttons side="left">
         <button class="button button-icon button-clear ion-navicon" menu-toggle="left">
         </button>
@@ -16,21 +15,34 @@
     <ion-header-bar class="bar-stable">
       <h1 class="title"><!-- Left --></h1>
     </ion-header-bar>
+    
     <ion-content>
       <ion-list>
         <!-- <ion-item menu-close ng-click="login()">
           Login
         </ion-item> -->
         <ion-item menu-close href="#/app/dashboard">
-          Home
+          <i class="icon ion-ios-home"></i>&nbsp;&nbsp;&nbsp;&nbsp; Home
         </ion-item>
         <ion-item menu-close href="#/app/messages">
-          Messages
+           <i class="icon ion-chatbox-working"></i>&nbsp;&nbsp;&nbsp;&nbsp; Messages
         </ion-item>
         <ion-item menu-close href="#/app/events">
-          Events
+           <i class="icon ion-calendar"></i>&nbsp;&nbsp;&nbsp;&nbsp; Events
         </ion-item>
-        <ion-item menu-close href="#/app/search">
+        <ion-item menu-close href="#/app/profile">
+           <i class="icon ion-person"></i>&nbsp;&nbsp;&nbsp;&nbsp; Student Profile
+        </ion-item>
+        <ion-item menu-close href="#/app/testimonials">
+           <i class="icon ion-clipboard"></i>&nbsp;&nbsp;&nbsp;&nbsp; Testimonials
+        </ion-item>
+        <ion-item menu-close href="#/app/suggestions">
+           <i class="icon ion-speakerphone"></i>&nbsp;&nbsp;&nbsp;&nbsp; Suggestions
+        </ion-item>
+        <ion-item menu-close href="#">
+           <i class="icon ion-close-circled"></i>&nbsp;&nbsp;&nbsp;&nbsp; Logout
+        </ion-item>
+        <!-- <ion-item menu-close href="#/app/search">
           Search
         </ion-item>
         <ion-item menu-close href="#/app/browse">
@@ -38,7 +50,7 @@
         </ion-item>
         <ion-item menu-close href="#/app/playlists">
           Playlists
-        </ion-item>
+        </ion-item> -->
       </ion-list>
     </ion-content>
   </ion-side-menu>

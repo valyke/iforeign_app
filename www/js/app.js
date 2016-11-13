@@ -57,6 +57,15 @@ angular.module('starter', ['ionic', 'starter.controllers'])
     }
   })
 
+  .state('home.step', {
+    url: '/step',
+    views: {
+      'normalContent': {
+        templateUrl: 'templates/home_step.html'
+      }
+    }
+  })
+
 
   .state('app.search', {
     url: '/search',
@@ -108,6 +117,41 @@ angular.module('starter', ['ionic', 'starter.controllers'])
     views: {
       'menuContent': {
         templateUrl: 'templates/app_events.html'
+      }
+    }
+  })
+
+    .state('app.profile', {
+    url: '/profile',
+    views: {
+      'menuContent': {
+        templateUrl: 'templates/app_profile.html'
+      }
+    }
+  })    
+
+    .state('app.testimonials', {
+    url: '/testimonials',
+    views: {
+      'menuContent': {
+        templateUrl: 'templates/app_testimonial.html'
+      }
+    }
+  })
+
+    .state('app.testimonials_sem', {
+    url: '/testimonials_sem',
+    views: {
+      'menuContent': {
+        templateUrl: 'templates/app_testimonial_sem.html'
+      }
+    }
+  })
+    .state('app.suggestions', {
+    url: '/suggestions',
+    views: {
+      'menuContent': {
+        templateUrl: 'templates/app_suggestions.html'
       }
     }
   })
