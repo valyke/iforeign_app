@@ -89,7 +89,8 @@ angular.module('starter', ['ionic', 'starter.controllers'])
     url: '/messages',
     views: {
       'menuContent': {
-        templateUrl: 'templates/app_messages.html'
+        templateUrl: 'templates/app_messages.html',
+        controller : 'inboxCtrl'
       }
     }
   })
@@ -98,7 +99,8 @@ angular.module('starter', ['ionic', 'starter.controllers'])
     url: '/messages_outbox',
     views: {
       'menuContent': {
-        templateUrl: 'templates/app_messages_outbox.html'
+        templateUrl: 'templates/app_messages_outbox.html',
+        controller : 'outboxCtrl'
       }
     }
   })
@@ -107,7 +109,8 @@ angular.module('starter', ['ionic', 'starter.controllers'])
     url: '/messages_compose',
     views: {
       'menuContent': {
-        templateUrl: 'templates/app_messages_compose.html'
+        templateUrl: 'templates/app_messages_compose.html',
+        controller : 'composeCtrl'
       }
     }
   })
@@ -116,7 +119,8 @@ angular.module('starter', ['ionic', 'starter.controllers'])
     url: '/events',
     views: {
       'menuContent': {
-        templateUrl: 'templates/app_events.html'
+        templateUrl: 'templates/app_events.html',
+        controller : 'eventsCtrl'
       }
     }
   })
@@ -134,7 +138,8 @@ angular.module('starter', ['ionic', 'starter.controllers'])
     url: '/testimonials',
     views: {
       'menuContent': {
-        templateUrl: 'templates/app_testimonial.html'
+        templateUrl: 'templates/app_testimonial.html',
+        controller : 'testimonialCtrl'
       }
     }
   })
