@@ -11,9 +11,8 @@
 			Email
 			</div>
 			<select>
-				<option>markganzonlalata@gmail.com</option>
-				<option selected>Green</option>
-				<option>Red</option>
+				<option>Registrar</option>
+				<option ng-repeat="email in emails">{{  email.email }}</option>
 			</select>
 		</label>
 		<ion-item>
