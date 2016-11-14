@@ -52,5 +52,41 @@ angular.module('starter.controllers', [])
   ];
 })
 
+.controller('testimonialCtrl', function($scope, $stateParams, $http) {
+  $http.get('http://infosys.esy.es/ion/json_testimonials.php')
+  .success(function(response){
+    $scope.testimonials = response.testimonial_data;
+  });
+})
+
+.controller('composeCtrl', function($scope, $stateParams, $http) {
+  $http.get('http://infosys.esy.es/ion/json_student_list.php')
+  .success(function(response){
+    $scope.emails = response.student_list_data;
+  });
+})
+
+.controller('inboxCtrl', function($scope, $stateParams, $http) {
+  $http.get('http://infosys.esy.es/ion/json_inbox.php')
+  .success(function(response){
+    $scope.inboxes = response.convo_data;
+  });
+})
+
+.controller('outboxCtrl', function($scope, $stateParams, $http) {
+  $http.get('http://infosys.esy.es/ion/json_outbox.php')
+  .success(function(response){
+    $scope.outboxes = response.convo_data;
+  });
+})
+
+
+.controller('eventsCtrl', function($scope, $stateParams, $http) {
+  $http.get('http://infosys.esy.es/ion/json_events.php')
+  .success(function(response){
+    $scope.events = response.event_data;
+  });
+})
+
 .controller('PlaylistCtrl', function($scope, $stateParams) {
 });
