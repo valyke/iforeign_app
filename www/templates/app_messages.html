@@ -1,17 +1,13 @@
 <ion-view view-title="INBOX">
   <ion-pane>
-  <br><br>
-	<div class="list list-inset">
-		<div class="item">
-		Message Here
-		</div>
-		<div class="item">
-		Message Here
-		</div>
-		<div class="item">
-		Message Here
+  <ion-content>
+	<div class="list list-item">
+		<div class="item" ng-repeat="inbox in inboxes">
+		<label>{{ inbox.from }}</label><br>
+		{{  inbox.msg }}
 		</div>
 	</div>
+  </ion-content>
 	  <div class="tabs-striped tabs-icon-top tabs-color-balanced ">
 	    <div class="tabs">
 	      <a class="tab-item active" href="#/app/messages">
