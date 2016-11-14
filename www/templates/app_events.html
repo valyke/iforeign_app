@@ -3,9 +3,15 @@
 	<div class="padding">
 		<label>Cards of upcoming events.</label>
 	</div>
-	<div class="card">
-		<div class="item item-text-wrap">
-		Arduino @ CITE<br>Date: Nov 25, 1997
+	<div class="row" ng-repeat="event in events">
+		<div class="list card" style="width:100%">
+			<div class="item "> <!-- item-avatar-->
+				<h2>{{ event.subject }}</h2>
+			</div>
+			<div class="item item-body item-text-wrap">
+				<p>{{ event.date }} - {{ event.time }}</p>
+				<p>{{  event.content }}</p>
+			</div>
 		</div>
 	</div>
   </ion-content>
