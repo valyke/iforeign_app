@@ -3,20 +3,32 @@
 		<div class="list">
 		  <label class="item item-input item-stacked-label">
 		    <span class="input-label">Username</span>
-		    <input type="text" placeholder="03-1314-000916">
+		    <input type="text" ng-model="txtUsername" placeholder="03-1314-000916">
 		  </label>
 		  <label class="item item-input item-stacked-label">
 		    <span class="input-label">Password</span>
-		    <input type="text" placeholder="enter password">
+		    <input type="text" ng-model="txtPassword" placeholder="enter password">
 		  </label>
 		</div>
 		<div class="padding">
-			<!-- <button class="button button-block button-energized">
+			<button class="button button-block button-energized" ng-click="signIn()">
 			  Sign In
-			</button> -->
-			<a href="#/app/dashboard" class="button button-block button-energized">
+			</button>
+<!-- 			<a href="#/app/dashboard" class="button button-block button-energized">
 			  Sign In
-			</a>
+			</a> -->
+			<br>
+			<p ng-show="unable" style="color:red;text-align:center">Unable to Login</p>
 		</div>
+
 	</ion-content>
 </ion-view>
+
+<!--   // $scope.txtUsername = '';
+  // $scope.txtPassword = '';
+  // $scope.signIn = function(){
+  //   $http.post("http://infosys.esy.es/ion/json_login.php", 
+  //     {'username' : this.txtUsername , 'password' : this.txtPassword})
+  //   .success(function (data){
+  //     console.log(data);
+  //   }) -->
