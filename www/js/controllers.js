@@ -1,5 +1,7 @@
 angular.module('starter.controllers', [])
 
+.value('student_key', '')
+
 .controller('AppCtrl', function($scope, $ionicModal, $timeout, $ionicTabsDelegate) {
 
   // With the new view caching in Ionic, Controllers are only called
@@ -87,6 +89,31 @@ angular.module('starter.controllers', [])
     $scope.events = response.event_data;
   });
 })
+
+.controller('signInCtrl', function($scope, $stateParams, $http) {
+  $scope.txtUsername = '';
+  $scope.txtPassword = '';
+
+  $scope.signIn = function(){
+    $http.post('http://infosys.esy.es/ion/json_login.php',
+      {'username' : this.txtUsername, 'password': this.txtPassword})
+    .success(function(data){
+     // console.log(data);
+      if(data[0]['logged'] == '1')
+      {
+        //console.log('logged in');
+        this.student_key = 'student key here';
+        console.log(student_key);
+        window.location = '#/app/dashboard';
+      }else{
+        //console.log('unable to login');
+        $scope.unable = true;
+
+      }
+      //console.log(data[0]['logged']);
+    })
+  }
+}) //end controller
 
 .controller('PlaylistCtrl', function($scope, $stateParams) {
 });
