@@ -43,7 +43,8 @@ angular.module('starter', ['ionic', 'starter.controllers'])
     url: '/landing',
     views: {
       'normalContent': {
-        templateUrl: 'templates/home_landing.html'
+        templateUrl: 'templates/home_landing.html',
+        controller : 'landingCtrl'
       }
     }
   })
@@ -131,7 +132,8 @@ angular.module('starter', ['ionic', 'starter.controllers'])
     url: '/profile',
     views: {
       'menuContent': {
-        templateUrl: 'templates/app_profile.html'
+        templateUrl: 'templates/app_profile.html',
+        controller: 'studentProfileCtrl'
       }
     }
   })    
@@ -150,7 +152,8 @@ angular.module('starter', ['ionic', 'starter.controllers'])
     url: '/testimonials_sem',
     views: {
       'menuContent': {
-        templateUrl: 'templates/app_testimonial_sem.html'
+        templateUrl: 'templates/app_testimonial_sem.html',
+        controller: 'testimonial2Ctrl'
       }
     }
   })
@@ -158,7 +161,8 @@ angular.module('starter', ['ionic', 'starter.controllers'])
     url: '/suggestions',
     views: {
       'menuContent': {
-        templateUrl: 'templates/app_suggestions.html'
+        templateUrl: 'templates/app_suggestions.html',
+        controller : 'suggestionsCtrl'
       }
     }
   })
