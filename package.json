@@ -1,7 +1,7 @@
 {
-  "name": "iforeign",
-  "version": "1.1.1",
-  "description": "iforeign: An Ionic project",
+  "name": "UPang iForeign",
+  "version": "1.0.0",
+  "description": "Official exclusive app for foreign students of University of Pangasinan",
   "dependencies": {
     "gulp": "^3.5.6",
     "gulp-sass": "^2.0.4",
