@@ -55,13 +55,31 @@ app.controller('PlaylistsCtrl', function($scope) {
 })
 
 app.controller('testimonialCtrl', function($scope, $stateParams, $http) {
+  $scope.get_logged_status = sessionStorage.getItem('logged_status');
+  console.log('Testimonials Logged Status: ' + $scope.get_logged_status);
+  if($scope.get_logged_status == 'false')
+    window.location ='#/login';
+
   $http.get('http://infosys.esy.es/ion/json_testimonials.php')
   .success(function(response){
     $scope.testimonials = response.testimonial_data;
   });
 })
 
+app.controller('testimonial2Ctrl', function($scope, $stateParams) {
+  $scope.get_logged_status = sessionStorage.getItem('logged_status');
+  console.log('Testimonials 2nd sem Logged Status: ' + $scope.get_logged_status);
+  if($scope.get_logged_status == 'false')
+    window.location ='#/login';
+  
+})
+
 app.controller('composeCtrl', function($scope, $stateParams, $http) {
+  $scope.get_logged_status = sessionStorage.getItem('logged_status');
+  console.log('Compose Logged Status: ' + $scope.get_logged_status);
+  if($scope.get_logged_status == 'false')
+    window.location ='#/login';
+
 
   $scope.sendMessage = function(){
     $scope.studentNumber = sessionStorage.getItem('student_number');
@@ -83,6 +101,10 @@ app.controller('composeCtrl', function($scope, $stateParams, $http) {
 })
 
 app.controller('inboxCtrl', function($scope, $stateParams, $http) {
+  $scope.get_logged_status = sessionStorage.getItem('logged_status');
+  console.log('Inbox Logged Status: ' + $scope.get_logged_status);
+  if($scope.get_logged_status == 'false')
+    window.location ='#/login';
 
   $scope.studentNumber = sessionStorage.getItem('student_number');
   $scope.doRefresh = function(){
@@ -108,7 +130,11 @@ app.controller('inboxCtrl', function($scope, $stateParams, $http) {
 })//end inbox controller
 
 app.controller('outboxCtrl', function($scope, $stateParams, $http) {
-  
+  $scope.get_logged_status = sessionStorage.getItem('logged_status');
+  console.log('Outbox Logged Status: ' + $scope.get_logged_status);
+  if($scope.get_logged_status == 'false')
+    window.location ='#/login';
+
   $scope.studentNumber = sessionStorage.getItem('student_number');
   $scope.doRefresh = function(){
       $http.post('http://infosys.esy.es/ion/json_outbox.php',
@@ -133,21 +159,39 @@ app.controller('outboxCtrl', function($scope, $stateParams, $http) {
 })
 
 app.controller('dashboardCtrl', function($scope, $stateParams, $http) {
+
   $scope.displaySN = '';
   $scope.studentNumber = sessionStorage.getItem('student_number');
-  console.log($scope.studentNumber);
+  $scope.get_logged_status = sessionStorage.getItem('logged_status');
+  console.log("Dashboard Page Logged Status: " + $scope.get_logged_status);
+
+  if($scope.get_logged_status == 'false')
+    window.location ='#/login';
+
 })
 
 app.controller('eventsCtrl', function($scope, $stateParams, $http) {
+  $scope.get_logged_status = sessionStorage.getItem('logged_status');
+  console.log('Events Logged Status: ' + $scope.get_logged_status);
+  if($scope.get_logged_status == 'false')
+    window.location ='#/login';
+
   $http.get('http://infosys.esy.es/ion/json_events.php')
   .success(function(response){
     $scope.events = response.event_data;
       $scope.studentNumber = sessionStorage.getItem('student_number');
-      console.log( $scope.studentNumber);
+      //console.log( $scope.studentNumber);
   });
 })
 
 app.controller('signInCtrl', function($scope, $stateParams, $http) {
+  $scope.get_logged_status = sessionStorage.getItem('logged_status');
+
+  console.log('Sign In Page Logged Status: '+ $scope.get_logged_status);
+  if($scope.get_logged_status == true)
+    //console.log('should redirect');
+    window.location ='#/app/dashboard';
+ //sessionStorage.removeItem('logged_status');
   sessionStorage.removeItem('student_number');
   $scope.txtUsername = '';
   $scope.txtPassword = '';
@@ -159,21 +203,41 @@ app.controller('signInCtrl', function($scope, $stateParams, $http) {
       if(data[0]['logged'] === true)
       {
         $scope.unable = false;
-        //console.log(data[0]);
-        //console.log(data[0]['student_number']);
         sessionStorage.setItem('student_number', data[0]['student_number']);
         $scope.studentNumber = sessionStorage.getItem('student_number');
-        console.log( $scope.studentNumber);
+        $scope.logged_status = sessionStorage.setItem('logged_status', true);
         window.location = '#/app/dashboard';
       }else{
-        //console.log('unable to login');
+        console.log('Unable to Login. Logged Status: '+$scope.get_logged_status);
         $scope.unable = true;
-
       }
       //console.log(data[0]['logged']);
     })
-  }
+  }//end sign in function
+
 }) //end controller
+
+app.controller('landingCtrl', function($scope, $stateParams) {
+  sessionStorage.setItem('logged_status', false);
+  $scope.get_logged_status = sessionStorage.getItem('logged_status');
+  console.log('Landing Page Logged Status: '+$scope.get_logged_status);
+})
+
+app.controller('studentProfileCtrl', function($scope, $stateParams) {
+  $scope.get_logged_status = sessionStorage.getItem('logged_status');
+  console.log('Profile Logged Status: ' + $scope.get_logged_status);
+  if($scope.get_logged_status == 'false')
+    window.location ='#/login';
+})
+
+app.controller('suggestionsCtrl', function($scope, $stateParams) {
+  $scope.get_logged_status = sessionStorage.getItem('logged_status');
+  console.log('Suggesttions Logged Status: ' + $scope.get_logged_status);
+  if($scope.get_logged_status == 'false')
+    window.location ='#/login';
+  
+})
 
 app.controller('PlaylistCtrl', function($scope, $stateParams) {
 });
+
