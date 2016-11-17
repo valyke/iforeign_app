@@ -1,8 +1,13 @@
-<ion-view view-title="INBOX">
+<ion-view  view-title="INBOX">
   <ion-pane>
   <ion-content>
+	<ion-refresher
+	pulling-text="Pull to refresh..."
+	on-refresh="doRefresh()">
+	</ion-refresher>
+	
 	<div class="list list-item">
-		<div class="item" ng-repeat="inbox in inboxes">
+		<div class="item" ng-repeat="inbox in messages">
 		<label>{{ inbox.from }}</label><br>
 		{{  inbox.msg }}
 		</div>

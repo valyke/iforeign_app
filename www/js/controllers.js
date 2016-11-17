@@ -1,8 +1,8 @@
-angular.module('starter.controllers', [])
+var app_data = angular.module("data", []).constant('student_key', 'dummy-key');
+var app = angular.module('starter.controllers', []);
 
-.value('student_key', '')
 
-.controller('AppCtrl', function($scope, $ionicModal, $timeout, $ionicTabsDelegate) {
+app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $ionicTabsDelegate) {
 
   // With the new view caching in Ionic, Controllers are only called
   // when they are recreated or on app start, instead of every page change.
@@ -43,7 +43,7 @@ angular.module('starter.controllers', [])
   };
 })
 
-.controller('PlaylistsCtrl', function($scope) {
+app.controller('PlaylistsCtrl', function($scope) {
   $scope.playlists = [
     { title: 'Reggae', id: 1 },
     { title: 'Chill', id: 2 },
@@ -54,43 +54,101 @@ angular.module('starter.controllers', [])
   ];
 })
 
-.controller('testimonialCtrl', function($scope, $stateParams, $http) {
+app.controller('testimonialCtrl', function($scope, $stateParams, $http) {
   $http.get('http://infosys.esy.es/ion/json_testimonials.php')
   .success(function(response){
     $scope.testimonials = response.testimonial_data;
   });
 })
 
-.controller('composeCtrl', function($scope, $stateParams, $http) {
+app.controller('composeCtrl', function($scope, $stateParams, $http) {
+
+  $scope.sendMessage = function(){
+    $scope.studentNumber = sessionStorage.getItem('student_number');
+    $scope.email = '';
+    $scope.message = '';
+    $http.post('http://infosys.esy.es/ion/json_compose_message.php',
+      {'to' : this.email , 'message': this.message , 'from' : $scope.studentNumber})
+    .success(function(data){
+      console.log(data);
+    })
+  }
+
   $http.get('http://infosys.esy.es/ion/json_student_list.php')
   .success(function(response){
     $scope.emails = response.student_list_data;
-  });
+  }); //end controller
+
+
 })
 
-.controller('inboxCtrl', function($scope, $stateParams, $http) {
-  $http.get('http://infosys.esy.es/ion/json_inbox.php')
-  .success(function(response){
-    $scope.inboxes = response.convo_data;
-  });
+app.controller('inboxCtrl', function($scope, $stateParams, $http) {
+
+  $scope.studentNumber = sessionStorage.getItem('student_number');
+  $scope.doRefresh = function(){
+      $http.post('http://infosys.esy.es/ion/json_inbox.php',
+      {'student_number' : $scope.studentNumber})
+      .success(function(data){
+        console.log(data);
+        $scope.messages = data;
+      })
+      .finally(function() {
+       // Stop the ion-refresher from spinning
+       $scope.$broadcast('scroll.refreshComplete');
+     })
+  }
+
+  $http.post('http://infosys.esy.es/ion/json_inbox.php',
+    {'student_number' : $scope.studentNumber})
+  .success(function(data){
+      console.log(data);
+      $scope.messages = data;
+  })
+
+})//end inbox controller
+
+app.controller('outboxCtrl', function($scope, $stateParams, $http) {
+  
+  $scope.studentNumber = sessionStorage.getItem('student_number');
+  $scope.doRefresh = function(){
+      $http.post('http://infosys.esy.es/ion/json_outbox.php',
+      {'student_number' : $scope.studentNumber})
+      .success(function(data){
+        console.log(data);
+        $scope.messages_outbox = data;
+      })
+      .finally(function() {
+       // Stop the ion-refresher from spinning
+       $scope.$broadcast('scroll.refreshComplete');
+     })
+  }
+
+  $http.post('http://infosys.esy.es/ion/json_outbox.php',
+    {'student_number' : $scope.studentNumber})
+  .success(function(data){
+      console.log(data);
+      $scope.messages_outbox = data;
+  })
+
 })
 
-.controller('outboxCtrl', function($scope, $stateParams, $http) {
-  $http.get('http://infosys.esy.es/ion/json_outbox.php')
-  .success(function(response){
-    $scope.outboxes = response.convo_data;
-  });
+app.controller('dashboardCtrl', function($scope, $stateParams, $http) {
+  $scope.displaySN = '';
+  $scope.studentNumber = sessionStorage.getItem('student_number');
+  console.log($scope.studentNumber);
 })
 
-
-.controller('eventsCtrl', function($scope, $stateParams, $http) {
+app.controller('eventsCtrl', function($scope, $stateParams, $http) {
   $http.get('http://infosys.esy.es/ion/json_events.php')
   .success(function(response){
     $scope.events = response.event_data;
+      $scope.studentNumber = sessionStorage.getItem('student_number');
+      console.log( $scope.studentNumber);
   });
 })
 
-.controller('signInCtrl', function($scope, $stateParams, $http) {
+app.controller('signInCtrl', function($scope, $stateParams, $http) {
+  sessionStorage.removeItem('student_number');
   $scope.txtUsername = '';
   $scope.txtPassword = '';
 
@@ -98,12 +156,14 @@ angular.module('starter.controllers', [])
     $http.post('http://infosys.esy.es/ion/json_login.php',
       {'username' : this.txtUsername, 'password': this.txtPassword})
     .success(function(data){
-     // console.log(data);
-      if(data[0]['logged'] == '1')
+      if(data[0]['logged'] === true)
       {
-        //console.log('logged in');
-        this.student_key = 'student key here';
-        console.log(student_key);
+        $scope.unable = false;
+        //console.log(data[0]);
+        //console.log(data[0]['student_number']);
+        sessionStorage.setItem('student_number', data[0]['student_number']);
+        $scope.studentNumber = sessionStorage.getItem('student_number');
+        console.log( $scope.studentNumber);
         window.location = '#/app/dashboard';
       }else{
         //console.log('unable to login');
@@ -115,5 +175,5 @@ angular.module('starter.controllers', [])
   }
 }) //end controller
 
-.controller('PlaylistCtrl', function($scope, $stateParams) {
+app.controller('PlaylistCtrl', function($scope, $stateParams) {
 });

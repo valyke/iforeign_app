@@ -52,7 +52,8 @@ angular.module('starter', ['ionic', 'starter.controllers'])
     url: '/login',
     views: {
       'normalContent': {
-        templateUrl: 'templates/home_login.html'
+        templateUrl: 'templates/home_login.html',
+        controller: 'signInCtrl'
       }
     }
   })
@@ -80,7 +81,8 @@ angular.module('starter', ['ionic', 'starter.controllers'])
     url: '/dashboard',
     views: {
       'menuContent': {
-        templateUrl: 'templates/app_dashboard.html'
+        templateUrl: 'templates/app_dashboard.html',
+        controller : 'dashboardCtrl'
       }
     }
   })

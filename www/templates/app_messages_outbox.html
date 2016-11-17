@@ -1,9 +1,14 @@
 <ion-view view-title="Outbox">
   <ion-pane>
   <ion-content>
+	<ion-refresher
+	pulling-text="Pull to refresh..."
+	on-refresh="doRefresh()">
+	</ion-refresher>
+
 	<div class="list list-item">
-		<div class="item" ng-repeat="outbox in outboxes">
-		<label>{{ outbox.from_id }}</label>
+		<div class="item" ng-repeat="outbox in messages_outbox">
+		<label>{{ outbox.from }}</label><br>
 		{{ outbox.msg }}
 		</div>
 	</div>

@@ -10,18 +10,18 @@
 			<div class="input-label">
 			Email
 			</div>
-			<select>
+			<select ng-model="txtEmail">
 				<option>Registrar</option>
 				<option ng-repeat="email in emails">{{  email.email }}</option>
 			</select>
 		</label>
 		<ion-item>
 			<ion-label>Message</ion-label>
-			<textarea cols="50" rows="8" style="resize:none"></textarea>
+			<textarea cols="50" rows="8" style="resize:none" ng-model="txtMessage"></textarea>
 		</ion-item>
 	</div>
 	<div class="padding">
-		<button class="button button-energized button-full">
+		<button class="button button-energized button-full" ng-click="sendMessage()">
 		  Send Message
 		</button>
 	</div>
