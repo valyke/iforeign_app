@@ -117,6 +117,26 @@ angular.module('starter', ['ionic', 'starter.controllers'])
       }
     }
   })
+
+    .state('app.messages_expand', {
+    url: '/messages_expand',
+    views: {
+      'menuContent': {
+        templateUrl: 'templates/app_messages_expand.html',
+        controller : 'expandCtrl'
+      }
+    }
+  })
+
+    .state('app.messages_expand_outbox', {
+    url: '/messages_expand_outbox',
+    views: {
+      'menuContent': {
+        templateUrl: 'templates/app_messages_expand_outbox.html',
+        controller : 'expandOutboxCtrl'
+      }
+    }
+  })
     
     .state('app.events', {
     url: '/events',
