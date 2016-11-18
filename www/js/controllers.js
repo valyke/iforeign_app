@@ -100,11 +100,15 @@ app.controller('composeCtrl', function($scope, $stateParams, $http) {
 
 })
 
-app.controller('inboxCtrl', function($scope, $stateParams, $http) {
+app.controller('inboxCtrl', function($scope, $stateParams, $http, $state) {
   $scope.get_logged_status = sessionStorage.getItem('logged_status');
   console.log('Inbox Logged Status: ' + $scope.get_logged_status);
   if($scope.get_logged_status == 'false')
     window.location ='#/login';
+
+  sessionStorage.removeItem('passedId'); //resets session for passed values
+  sessionStorage.removeItem('passedFrom'); 
+  sessionStorage.removeItem('passedMessage');
 
   $scope.studentNumber = sessionStorage.getItem('student_number');
   $scope.doRefresh = function(){
@@ -127,9 +131,21 @@ app.controller('inboxCtrl', function($scope, $stateParams, $http) {
       $scope.messages = data;
   })
 
+  $scope.passValue = function(id, from, message){ //pass value
+    sessionStorage.setItem('passedId', id);
+    sessionStorage.setItem('passedFrom', from);
+    sessionStorage.setItem('passedMessage', message);
+
+    $scope.passedId = sessionStorage.getItem('passedId');
+    $scope.passedFrom = sessionStorage.getItem('passedFrom');
+    $scope.passedMessage = sessionStorage.getItem('passedMessage');
+    //console.log('root scopes passed: '+ $scope.passedId + $scope.passedFrom + $scope.passedMessage);
+    $state.go('app.messages_expand');
+  }
+
 })//end inbox controller
 
-app.controller('outboxCtrl', function($scope, $stateParams, $http) {
+app.controller('outboxCtrl', function($scope, $stateParams, $http, $state) {
   $scope.get_logged_status = sessionStorage.getItem('logged_status');
   console.log('Outbox Logged Status: ' + $scope.get_logged_status);
   if($scope.get_logged_status == 'false')
@@ -156,7 +172,41 @@ app.controller('outboxCtrl', function($scope, $stateParams, $http) {
       $scope.messages_outbox = data;
   })
 
+  $scope.passOutboxValue = function(id, to, from, message){ //pass value
+    sessionStorage.setItem('passedOutboxId', id);
+    sessionStorage.setItem('passedOutboxTo', to);
+    sessionStorage.setItem('passedOutboxFrom', from);
+    sessionStorage.setItem('passedOutboxMessage', message);
+
+    $scope.passedOutboxId = sessionStorage.getItem('passedOutboxId');
+    $scope.passedOutboxTo = sessionStorage.getItem('passedOutboxTo');
+    $scope.passedOutboxFrom = sessionStorage.getItem('passedOutboxFrom');
+    $scope.passedOutboxMessage = sessionStorage.getItem('passedOutboxMessage');
+    console.log('Outbox session passed: '+ $scope.passedOutboxId + $scope.passedOutboxTo + $scope.passedOutboxFrom + $scope.passedOutboxMessage);
+    $state.go('app.messages_expand_outbox');
+  }
+
 })
+
+
+app.controller('expandOutboxCtrl', function($scope, $stateParams, $http) {
+  $scope.get_logged_status = sessionStorage.getItem('logged_status');
+  console.log('Expand Message Outbox Logged Status: ' + $scope.get_logged_status);
+  if($scope.get_logged_status == 'false')
+  {  window.location ='#/login'; }
+
+  $scope.passedOutboxId = sessionStorage.getItem('passedOutboxId');
+  $scope.passedOutboxTo = sessionStorage.getItem('passedOutboxTo');
+  $scope.passedOutboxFrom = sessionStorage.getItem('passedOutboxFrom');
+  $scope.passedOutboxMessage = sessionStorage.getItem('passedOutboxMessage');
+
+  console.log('Passed From outbox ID: ' + $scope.passedOutboxId);
+  console.log('Passed From outbox to: ' + $scope.passedOutboxTo);
+  console.log('Passed From outbox from: ' + $scope.passedOutboxFrom);
+  console.log('Passed From outbox message: ' + $scope.passedOutboxMessage);
+
+})
+
 
 app.controller('dashboardCtrl', function($scope, $stateParams, $http) {
 
@@ -237,6 +287,48 @@ app.controller('suggestionsCtrl', function($scope, $stateParams) {
     window.location ='#/login';
   
 })
+
+
+app.controller('expandCtrl', function($scope, $stateParams, $http) {
+  $scope.get_logged_status = sessionStorage.getItem('logged_status');
+  console.log('Expand Message Logged Status: ' + $scope.get_logged_status);
+  if($scope.get_logged_status == 'false')
+  {  window.location ='#/login'; }
+  
+  $scope.studentNumber = sessionStorage.getItem('student_number');
+  $scope.getPassedId = sessionStorage.getItem('passedId');
+  $scope.getPassedFrom = sessionStorage.getItem('passedFrom');
+  $scope.getPassedMessage = sessionStorage.getItem('passedMessage');
+
+  console.log('Passed id: ' + $scope.getPassedId);
+  console.log('Passed from: ' + $scope.getPassedFrom);
+  console.log('Passed message: ' + $scope.getPassedMessage);
+  console.log('logged Student number: ' + $scope.studentNumber);
+  $scope.sendReply = function(){
+    if($scope.txtReply == null)
+      console.log('empty');
+    else{
+      $http.post('http://infosys.esy.es/ion/json_send_reply.php',
+      { 
+        'from' : $scope.studentNumber,
+        'to' : $scope.getPassedFrom,
+        'message' : $scope.txtReply
+      })
+      .success(function(data) {
+        console.log(data[0]['replied']);
+        if(data[0]['replied'])
+        {
+          console.log('replied success');
+          $scope.displayReplied = true;
+        }  
+        else
+          console.log('unreplied');
+      })
+    } // end else
+  }
+
+})
+
 
 app.controller('PlaylistCtrl', function($scope, $stateParams) {
 });
