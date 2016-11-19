@@ -12,18 +12,20 @@
 			</div>
 			<select ng-model="txtEmail">
 				<option>Registrar</option>
-				<option ng-repeat="email in emails">{{  email.email }}</option>
+				<option ng-repeat="email in emails">{{  email }}</option>
 			</select>
 		</label>
-		<ion-item>
+		<div class="item">
 			<ion-label>Message</ion-label>
 			<textarea cols="50" rows="8" style="resize:none" ng-model="txtMessage"></textarea>
-		</ion-item>
+		</div>
 	</div>
 	<div class="padding">
 		<button class="button button-energized button-full" ng-click="sendMessage()">
 		  Send Message
 		</button>
+		<p style="color:red;text-align:center" ng-show="not_sent"><br>Message not sent. Either field is empty!</p>
+		<p style="color:green;text-align:center" ng-show="sent"><br>Message has been sent!</p>
 	</div>
 
 	  <div class="tabs-striped tabs-icon-top tabs-color-balanced ">
