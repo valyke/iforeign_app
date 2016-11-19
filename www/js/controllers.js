@@ -75,26 +75,46 @@ app.controller('testimonial2Ctrl', function($scope, $stateParams) {
 })
 
 app.controller('composeCtrl', function($scope, $stateParams, $http) {
+  $scope.studentNumber = sessionStorage.getItem('student_number');
+  console.log('compose student number: ' + $scope.studentNumber);
   $scope.get_logged_status = sessionStorage.getItem('logged_status');
   console.log('Compose Logged Status: ' + $scope.get_logged_status);
   if($scope.get_logged_status == 'false')
-    window.location ='#/login';
-
+  {  window.location ='#/login'; }
 
   $scope.sendMessage = function(){
-    $scope.studentNumber = sessionStorage.getItem('student_number');
-    $scope.email = '';
-    $scope.message = '';
-    $http.post('http://infosys.esy.es/ion/json_compose_message.php',
-      {'to' : this.email , 'message': this.message , 'from' : $scope.studentNumber})
-    .success(function(data){
-      console.log(data);
-    })
+    if($scope.txtEmail == null || $scope.txtMessage == null)
+    {
+      console.log('email or message fields are empty');
+      $scope.not_sent = true;
+    } 
+    else
+    {
+      console.log('Email chosen: ' + $scope.txtEmail);
+      console.log('Repy text: ' + $scope.txtMessage);
+
+      $scope.studentNumber = sessionStorage.getItem('student_number');
+      $http.post('http://infosys.esy.es/ion/json_compose_message.php',
+        {'to' : $scope.txtEmail , 'message': $scope.txtMessage , 'from' : $scope.studentNumber})
+      .success(function(data){
+        $scope.not_sent = false;
+        $scope.sent = true;
+        console.log(data);
+        $scope.txtEmail = null;
+        $scope.txtMessage = null;
+      })
+
+      
+    } 
+      
   }
 
-  $http.get('http://infosys.esy.es/ion/json_student_list.php')
-  .success(function(response){
-    $scope.emails = response.student_list_data;
+  $http.post('http://infosys.esy.es/ion/json_student_list.php',
+    { 'student_number' : $scope.studentNumber })
+  .success(function(data){
+    //console.log(response);
+    console.log(data[1][0]); // log json email sent from php
+    $scope.emails = data[1][0]; // assign json email to scope
   }); //end controller
 
 
@@ -115,8 +135,15 @@ app.controller('inboxCtrl', function($scope, $stateParams, $http, $state) {
       $http.post('http://infosys.esy.es/ion/json_inbox.php',
       {'student_number' : $scope.studentNumber})
       .success(function(data){
-        console.log(data);
-        $scope.messages = data;
+        if(data[0]['has_message'] == true)
+        {
+          console.log('student has message');
+          $scope.messages = data;
+          $scope.has_message = true;
+        }else{
+          console.log('Refreshed No mEssage');
+          $scope.no_message = true;
+        }
       })
       .finally(function() {
        // Stop the ion-refresher from spinning
@@ -127,8 +154,19 @@ app.controller('inboxCtrl', function($scope, $stateParams, $http, $state) {
   $http.post('http://infosys.esy.es/ion/json_inbox.php',
     {'student_number' : $scope.studentNumber})
   .success(function(data){
-      console.log(data);
-      $scope.messages = data;
+      console.log('has message? ' + data[0]['has_message']); //check if student has any msgs
+      if(data[0]['has_message'] == true)
+       {
+        console.log('student has message');
+        $scope.messages = data;
+        $scope.has_message = true;
+       } 
+      else
+      {
+        console.log('student has no messages');
+        $scope.no_message = true;
+      }
+     
   })
 
   $scope.passValue = function(id, from, message){ //pass value
@@ -156,8 +194,15 @@ app.controller('outboxCtrl', function($scope, $stateParams, $http, $state) {
       $http.post('http://infosys.esy.es/ion/json_outbox.php',
       {'student_number' : $scope.studentNumber})
       .success(function(data){
-        console.log(data);
-        $scope.messages_outbox = data;
+        if(data[0]['has_message'] == true)
+        {
+          console.log('has refreshed outbox message');
+          console.log(data);
+          $scope.messages_outbox = data;
+        }else{
+          console.log('no refreshed outbox message');
+          $scope.no_message = true;
+        }
       })
       .finally(function() {
        // Stop the ion-refresher from spinning
@@ -168,8 +213,17 @@ app.controller('outboxCtrl', function($scope, $stateParams, $http, $state) {
   $http.post('http://infosys.esy.es/ion/json_outbox.php',
     {'student_number' : $scope.studentNumber})
   .success(function(data){
+    console.log('has message outbox? ' + data[0]['has_message']);
+    if(data[0]['has_message'] == true)
+    { 
+      console.log('has outbox message');
       console.log(data);
+      $scope.has_message = true;
       $scope.messages_outbox = data;
+    }else{
+      console.log('no outbox message');
+      $scope.no_message = true;
+    }
   })
 
   $scope.passOutboxValue = function(id, to, from, message){ //pass value
@@ -238,11 +292,11 @@ app.controller('signInCtrl', function($scope, $stateParams, $http) {
   $scope.get_logged_status = sessionStorage.getItem('logged_status');
 
   console.log('Sign In Page Logged Status: '+ $scope.get_logged_status);
-  if($scope.get_logged_status == true)
+  if($scope.get_logged_status == 'true')
     //console.log('should redirect');
-    window.location ='#/app/dashboard';
+  {  window.location ='#/app/dashboard'; }
  //sessionStorage.removeItem('logged_status');
-  sessionStorage.removeItem('student_number');
+  //sessionStorage.removeItem('student_number');
   $scope.txtUsername = '';
   $scope.txtPassword = '';
 
@@ -273,19 +327,69 @@ app.controller('landingCtrl', function($scope, $stateParams) {
   console.log('Landing Page Logged Status: '+$scope.get_logged_status);
 })
 
-app.controller('studentProfileCtrl', function($scope, $stateParams) {
+app.controller('studentProfileCtrl', function($scope, $stateParams, $http) {
   $scope.get_logged_status = sessionStorage.getItem('logged_status');
   console.log('Profile Logged Status: ' + $scope.get_logged_status);
   if($scope.get_logged_status == 'false')
-    window.location ='#/login';
+  {  window.location ='#/login'; }
+
+  $scope.studentNumber = sessionStorage.getItem('student_number');
+  console.log('Profile student number: ' + $scope.studentNumber);
+  
+  $http.post('http://infosys.esy.es/ion/json_profile.php',
+  { 'student_number' : $scope.studentNumber})
+  .success(function(data){
+    console.log(data.profile[0]); // get returned object
+    $scope.profile_data = data.profile[0];
+    $scope.txtBirthdate = $scope.profile_data.birthdate;
+    $scope.txtAddress = $scope.profile_data.address;
+  })
+  $scope.txtBirthdate = '';
+  $scope.txtAddress = '';
+
+  $scope.update = function(){
+    console.log('value from txtbox' + this.txtBirthdate);
+    console.log('value from txtbox' + this.txtAddress);
+    console.log('Update student number: ' + $scope.studentNumber);
+
+    $http.post('http://infosys.esy.es/ion/json_update_profile.php',
+      { 'student_number' : $scope.studentNumber , 'birthdate' : this.txtBirthdate , 'address' : this.txtAddress})
+    .success(function(data){
+      console.log(data);
+      $scope.updated = true;
+    })
+  }
+
 })
 
-app.controller('suggestionsCtrl', function($scope, $stateParams) {
+app.controller('suggestionsCtrl', function($scope, $stateParams, $http) {
   $scope.get_logged_status = sessionStorage.getItem('logged_status');
   console.log('Suggesttions Logged Status: ' + $scope.get_logged_status);
   if($scope.get_logged_status == 'false')
     window.location ='#/login';
   
+  $scope.studentNumber = sessionStorage.getItem('student_number');
+  $scope.suggest = function(){
+    if($scope.txtSuggestion == null || $scope.txtSuggestion == ''){
+      console.log('suggestion field empty');
+      $scope.msgEmpty = true;
+      $scope.sent = false;
+    }else{
+      console.log('has value');
+
+      $http.post('http://infosys.esy.es/ion/json_suggestions.php',
+        { 'student_number' : $scope.studentNumber , 'message' : $scope.txtSuggestion })
+      .success(function(data){
+        $scope.msgEmpty = false;
+        $scope.sent = true;
+        console.log(data);
+      })
+
+      
+
+    }
+    
+  }
 })
 
 
@@ -320,6 +424,7 @@ app.controller('expandCtrl', function($scope, $stateParams, $http) {
         {
           console.log('replied success');
           $scope.displayReplied = true;
+          $scope.txtReply = null;
         }  
         else
           console.log('unreplied');
