@@ -1,4 +1,4 @@
-<ion-view   view-title="INBOX">
+<ion-view cache-view="false" view-title="INBOX">
   <ion-pane>
   <ion-content>
 	<ion-refresher
@@ -7,9 +7,12 @@
 	</ion-refresher>
 	
 	<div class="list list-item">
-		<div class="item" ng-repeat="inbox in messages" ng-click="passValue(inbox.id ,  inbox.from, inbox.msg)">
-			<label>{{ inbox.from }}</label><br>
+		<div class="item" ng-show ="has_message" ng-repeat="inbox in messages" ng-click="passValue(inbox.id ,  inbox.from, inbox.msg)">
+			<label>From: {{ inbox.from }}</label><br><br>
 			{{  inbox.msg }}		
+		</div>
+		<div class="item" ng-show ="no_message" >
+			No Messages to Show.	
 		</div>
 	</div>
   </ion-content>
