@@ -49,6 +49,16 @@ angular.module('starter', ['ionic', 'starter.controllers'])
     }
   })
 
+
+  .state('home.video', {
+    url: '/video',
+    views: {
+      'normalContent': {
+        templateUrl: 'templates/home_video.html'
+      }
+    }
+  })
+
   .state('home.login', {
     url: '/login',
     views: {
