@@ -288,7 +288,7 @@ app.controller('eventsCtrl', function($scope, $stateParams, $http) {
   });
 })
 
-app.controller('signInCtrl', function($scope, $stateParams, $http) {
+app.controller('signInCtrl', function($scope, $stateParams, $http, $ionicPopup) {
   $scope.get_logged_status = sessionStorage.getItem('logged_status');
 
   console.log('Sign In Page Logged Status: '+ $scope.get_logged_status);
@@ -313,7 +313,12 @@ app.controller('signInCtrl', function($scope, $stateParams, $http) {
         window.location = '#/app/dashboard';
       }else{
         console.log('Unable to Login. Logged Status: '+$scope.get_logged_status);
-        $scope.unable = true;
+        //$scope.unable = true;
+        var popup = $ionicPopup.alert({
+          title : 'Login failed!',
+          template : 'Unable to Login. Incorrect details.'
+        });
+
       }
       //console.log(data[0]['logged']);
     })
