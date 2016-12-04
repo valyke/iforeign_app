@@ -1,5 +1,5 @@
 var app_data = angular.module("data", []).constant('student_key', 'dummy-key');
-var app = angular.module('starter.controllers', []);
+var app = angular.module('starter.controllers', ['ionic','ngCordova']);
 
 
 app.controller('AppCtrl', function($scope, $ionicModal, $timeout, $ionicTabsDelegate) {
@@ -74,7 +74,7 @@ app.controller('testimonial2Ctrl', function($scope, $stateParams) {
   
 })
 
-app.controller('composeCtrl', function($scope, $stateParams, $http) {
+app.controller('composeCtrl', function($scope, $stateParams, $http, $cordovaToast) {
   $scope.studentNumber = sessionStorage.getItem('student_number');
   console.log('compose student number: ' + $scope.studentNumber);
   $scope.get_logged_status = sessionStorage.getItem('logged_status');
@@ -82,11 +82,15 @@ app.controller('composeCtrl', function($scope, $stateParams, $http) {
   if($scope.get_logged_status == 'false')
   {  window.location ='#/login'; }
 
-  $scope.sendMessage = function(){
+  $scope.sendMessage = function(message, duration, location){
     if($scope.txtEmail == null || $scope.txtMessage == null)
     {
       console.log('email or message fields are empty');
-      $scope.not_sent = true;
+      $cordovaToast.show('Sending failed. either fields are empty! ', 'long', 'bottom').then(function(success) {
+            console.log("The toast was shown");
+        }, function (error) {
+            console.log("The toast was not shown due to " + error);
+        });
     } 
     else
     {
@@ -97,13 +101,16 @@ app.controller('composeCtrl', function($scope, $stateParams, $http) {
       $http.post('http://infosys.esy.es/ion/json_compose_message.php',
         {'to' : $scope.txtEmail , 'message': $scope.txtMessage , 'from' : $scope.studentNumber})
       .success(function(data){
-        $scope.not_sent = false;
-        $scope.sent = true;
         console.log(data);
         $scope.txtEmail = null;
         $scope.txtMessage = null;
       })
 
+      $cordovaToast.show(message, duration, location).then(function(success) {
+            console.log("The toast was shown");
+        }, function (error) {
+            console.log("The toast was not shown due to " + error);
+        });
       
     } 
       
@@ -169,15 +176,17 @@ app.controller('inboxCtrl', function($scope, $stateParams, $http, $state) {
      
   })
 
-  $scope.passValue = function(id, from, message){ //pass value
+  $scope.passValue = function(id, from, message, date){ //pass value
     sessionStorage.setItem('passedId', id);
     sessionStorage.setItem('passedFrom', from);
     sessionStorage.setItem('passedMessage', message);
+    sessionStorage.setItem('passedDate', date);
 
     $scope.passedId = sessionStorage.getItem('passedId');
     $scope.passedFrom = sessionStorage.getItem('passedFrom');
     $scope.passedMessage = sessionStorage.getItem('passedMessage');
-    //console.log('root scopes passed: '+ $scope.passedId + $scope.passedFrom + $scope.passedMessage);
+    $scope.passedDate = sessionStorage.getItem('passedDate');
+    //console.log('root scopes passed: '+ $scope.passedId + $scope.passedFrom + $scope.passedMessage + $scope.passedDate);
     $state.go('app.messages_expand');
   }
 
@@ -226,17 +235,19 @@ app.controller('outboxCtrl', function($scope, $stateParams, $http, $state) {
     }
   })
 
-  $scope.passOutboxValue = function(id, to, from, message){ //pass value
+  $scope.passOutboxValue = function(id, to, from, message, date){ //pass value
     sessionStorage.setItem('passedOutboxId', id);
     sessionStorage.setItem('passedOutboxTo', to);
     sessionStorage.setItem('passedOutboxFrom', from);
     sessionStorage.setItem('passedOutboxMessage', message);
+    sessionStorage.setItem('passedOutboxDate', date);
 
     $scope.passedOutboxId = sessionStorage.getItem('passedOutboxId');
     $scope.passedOutboxTo = sessionStorage.getItem('passedOutboxTo');
     $scope.passedOutboxFrom = sessionStorage.getItem('passedOutboxFrom');
     $scope.passedOutboxMessage = sessionStorage.getItem('passedOutboxMessage');
-    console.log('Outbox session passed: '+ $scope.passedOutboxId + $scope.passedOutboxTo + $scope.passedOutboxFrom + $scope.passedOutboxMessage);
+    $scope.passedOutboxDate = sessionStorage.getItem('passedOutboxDate');
+    console.log('Outbox session passed: '+ $scope.passedOutboxId + $scope.passedOutboxTo + $scope.passedOutboxFrom + $scope.passedOutboxMessage + $scope.passedOutboxDate);
     $state.go('app.messages_expand_outbox');
   }
 
@@ -253,11 +264,13 @@ app.controller('expandOutboxCtrl', function($scope, $stateParams, $http) {
   $scope.passedOutboxTo = sessionStorage.getItem('passedOutboxTo');
   $scope.passedOutboxFrom = sessionStorage.getItem('passedOutboxFrom');
   $scope.passedOutboxMessage = sessionStorage.getItem('passedOutboxMessage');
+  $scope.passedOutboxDate = sessionStorage.getItem('passedOutboxDate');
 
   console.log('Passed From outbox ID: ' + $scope.passedOutboxId);
   console.log('Passed From outbox to: ' + $scope.passedOutboxTo);
   console.log('Passed From outbox from: ' + $scope.passedOutboxFrom);
   console.log('Passed From outbox message: ' + $scope.passedOutboxMessage);
+  console.log('Passed From outbox date: ' + $scope.passedOutboxDate);
 
 })
 
@@ -288,7 +301,21 @@ app.controller('eventsCtrl', function($scope, $stateParams, $http) {
   });
 })
 
-app.controller('signInCtrl', function($scope, $stateParams, $http, $ionicPopup) {
+app.controller('boardCtrl', function($scope, $stateParams, $http) {
+  $scope.get_logged_status = sessionStorage.getItem('logged_status');
+  console.log('Board Logged Status: ' + $scope.get_logged_status);
+  if($scope.get_logged_status == 'false')
+    window.location ='#/login';
+
+  $http.get('http://infosys.esy.es/ion/json_board.php')
+  .success(function(response){
+    $scope.boards = response.announcement_data;
+      $scope.studentNumber = sessionStorage.getItem('student_number');
+      //console.log( $scope.studentNumber);
+  });
+})
+
+app.controller('signInCtrl', function($scope, $stateParams, $http, $cordovaToast) {
   $scope.get_logged_status = sessionStorage.getItem('logged_status');
 
   console.log('Sign In Page Logged Status: '+ $scope.get_logged_status);
@@ -300,7 +327,7 @@ app.controller('signInCtrl', function($scope, $stateParams, $http, $ionicPopup) 
   $scope.txtUsername = '';
   $scope.txtPassword = '';
 
-  $scope.signIn = function(){
+  $scope.signIn = function(message, duration, location){
     $http.post('http://infosys.esy.es/ion/json_login.php',
       {'username' : this.txtUsername, 'password': this.txtPassword})
     .success(function(data){
@@ -313,11 +340,17 @@ app.controller('signInCtrl', function($scope, $stateParams, $http, $ionicPopup) 
         window.location = '#/app/dashboard';
       }else{
         console.log('Unable to Login. Logged Status: '+$scope.get_logged_status);
-        //$scope.unable = true;
-        var popup = $ionicPopup.alert({
-          title : 'Login failed!',
-          template : 'Unable to Login. Incorrect details.'
+        //show toast
+        $cordovaToast.show(message, duration, location).then(function(success) {
+            console.log("The toast was shown");
+        }, function (error) {
+            console.log("The toast was not shown due to " + error);
         });
+        //$scope.unable = true;
+        // var popup = $ionicPopup.alert({
+        //   title : 'Login failed!',
+        //   template : 'Unable to Login. Incorrect details.'
+        // });
 
       }
       //console.log(data[0]['logged']);
@@ -332,7 +365,7 @@ app.controller('landingCtrl', function($scope, $stateParams) {
   console.log('Landing Page Logged Status: '+$scope.get_logged_status);
 })
 
-app.controller('studentProfileCtrl', function($scope, $stateParams, $http) {
+app.controller('studentProfileCtrl', function($scope, $stateParams, $http, $cordovaToast) {
   $scope.get_logged_status = sessionStorage.getItem('logged_status');
   console.log('Profile Logged Status: ' + $scope.get_logged_status);
   if($scope.get_logged_status == 'false')
@@ -352,7 +385,7 @@ app.controller('studentProfileCtrl', function($scope, $stateParams, $http) {
   $scope.txtBirthdate = '';
   $scope.txtAddress = '';
 
-  $scope.update = function(){
+  $scope.update = function(message, duration, location){
     console.log('value from txtbox' + this.txtBirthdate);
     console.log('value from txtbox' + this.txtAddress);
     console.log('Update student number: ' + $scope.studentNumber);
@@ -361,34 +394,46 @@ app.controller('studentProfileCtrl', function($scope, $stateParams, $http) {
       { 'student_number' : $scope.studentNumber , 'birthdate' : this.txtBirthdate , 'address' : this.txtAddress})
     .success(function(data){
       console.log(data);
-      $scope.updated = true;
     })
+
+    $cordovaToast.show(message, duration, location).then(function(success) {
+            console.log("The toast was shown");
+        }, function (error) {
+            console.log("The toast was not shown due to " + error);
+        });
   }
 
 })
 
-app.controller('suggestionsCtrl', function($scope, $stateParams, $http) {
+app.controller('suggestionsCtrl', function($scope, $stateParams, $http, $cordovaToast) {
   $scope.get_logged_status = sessionStorage.getItem('logged_status');
   console.log('Suggesttions Logged Status: ' + $scope.get_logged_status);
   if($scope.get_logged_status == 'false')
     window.location ='#/login';
   
   $scope.studentNumber = sessionStorage.getItem('student_number');
-  $scope.suggest = function(){
+  $scope.suggest = function(message, duration, location){
     if($scope.txtSuggestion == null || $scope.txtSuggestion == ''){
       console.log('suggestion field empty');
-      $scope.msgEmpty = true;
-      $scope.sent = false;
+      $cordovaToast.show('Sending failed! Suggestion feild empty.', 'long', 'bottom').then(function(success) {
+            console.log("The toast was shown");
+        }, function (error) {
+            console.log("The toast was not shown due to " + error);
+        });
     }else{
       console.log('has value');
 
       $http.post('http://infosys.esy.es/ion/json_suggestions.php',
         { 'student_number' : $scope.studentNumber , 'message' : $scope.txtSuggestion })
       .success(function(data){
-        $scope.msgEmpty = false;
-        $scope.sent = true;
         console.log(data);
       })
+
+        $cordovaToast.show(message, duration, location).then(function(success) {
+            console.log("The toast was shown");
+        }, function (error) {
+            console.log("The toast was not shown due to " + error);
+        });
 
       
 
@@ -398,7 +443,7 @@ app.controller('suggestionsCtrl', function($scope, $stateParams, $http) {
 })
 
 
-app.controller('expandCtrl', function($scope, $stateParams, $http) {
+app.controller('expandCtrl', function($scope, $stateParams, $http, $cordovaToast) {
   $scope.get_logged_status = sessionStorage.getItem('logged_status');
   console.log('Expand Message Logged Status: ' + $scope.get_logged_status);
   if($scope.get_logged_status == 'false')
@@ -408,14 +453,23 @@ app.controller('expandCtrl', function($scope, $stateParams, $http) {
   $scope.getPassedId = sessionStorage.getItem('passedId');
   $scope.getPassedFrom = sessionStorage.getItem('passedFrom');
   $scope.getPassedMessage = sessionStorage.getItem('passedMessage');
+  $scope.getPassedDate = sessionStorage.getItem('passedDate');
 
   console.log('Passed id: ' + $scope.getPassedId);
   console.log('Passed from: ' + $scope.getPassedFrom);
   console.log('Passed message: ' + $scope.getPassedMessage);
+  console.log('Passed date: ' + $scope.getPassedDate);
   console.log('logged Student number: ' + $scope.studentNumber);
-  $scope.sendReply = function(){
-    if($scope.txtReply == null)
+  $scope.sendReply = function(message, duration, location){
+    if($scope.txtReply == null) //check if empty reply
+    { 
       console.log('empty');
+      $cordovaToast.show('Message is empty!', 'short', 'bottom').then(function(success) {
+            console.log("The toast was shown");
+        }, function (error) {
+            console.log("The toast was not shown due to " + error);
+        });
+    }
     else{
       $http.post('http://infosys.esy.es/ion/json_send_reply.php',
       { 
@@ -428,8 +482,12 @@ app.controller('expandCtrl', function($scope, $stateParams, $http) {
         if(data[0]['replied'])
         {
           console.log('replied success');
-          $scope.displayReplied = true;
           $scope.txtReply = null;
+            $cordovaToast.show(message, duration, location).then(function(success) {
+              console.log("The toast was shown");
+            }, function (error) {
+                console.log("The toast was not shown due to " + error);
+            });
         }  
         else
           console.log('unreplied');
