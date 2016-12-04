@@ -3,17 +3,17 @@
   	<br><br><br>
   	<div class="padding">
   		<p>From: {{ getPassedFrom }}</p>
-  		<p>To: you</p><br>
+  		<p>To: you</p>
+  		<p>{{ getPassedDate }} </p><br>
 	  	<p>Message: <br> {{ getPassedMessage }}</p>
 
 		<div class="list list-inset">
 			<label class="item item-input">
 				<textarea rows="5" style="resize:none" placeholder="Type your reply.." ng-model="txtReply"></textarea>
 			</label>
-			<button class="button button-block button-energized" ng-click="sendReply()">
+			<button class="button button-block button-energized" ng-click="sendReply('Reply Sent!','short','bottom')">
 			  Reply
 			</button>
-			<p style="color:green;text-align: center" ng-show="displayReplied">Reply Sent!</p>
 		</div>
   	</div>
   </ion-pane>

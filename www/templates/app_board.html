@@ -1,0 +1,18 @@
+<ion-view cache-view="false" view-title="Bulletin Board">
+  <ion-content>
+	<div class="padding">
+		<label>Recent Announcements</label>
+	</div>
+	<div class="row" ng-repeat="board in boards">
+		<div class="list card" style="width:100%">
+			<div class="item "> <!-- item-avatar-->
+				<h2>{{ board.title }}</h2>
+			</div>
+			<div class="item item-body item-text-wrap">
+				<p>{{ board.date }}</p>
+				<p>{{  board.body }}</p>
+			</div>
+		</div>
+	</div>
+  </ion-content>
+</ion-view>

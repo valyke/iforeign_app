@@ -1,4 +1,4 @@
-<ion-view cache-view ="false" view-title="Outbox">
+<ion-view view-title="Outbox">
   <ion-pane>
   <ion-content>
 	<ion-refresher
@@ -7,14 +7,16 @@
 	</ion-refresher>
 
 	<div class="list list-item">
-		<div class="item" ng-show="has_message" ng-repeat="outbox in messages_outbox" ng-click="passOutboxValue(outbox.id, outbox.to, outbox.from , outbox.msg)">
+		<div class="item" ng-show="has_message" ng-repeat="outbox in messages_outbox" ng-click="passOutboxValue(outbox.id, outbox.to, outbox.from , outbox.msg, outbox.date)">
 			<label>To: {{ outbox.to }}</label><br><br>
 			{{ outbox.msg }}
+
 		</div>
 		<div class="item" ng-show ="no_message" >
 			No Messages to Show.
 		</div>
 	</div>
+	<br><br>
   </ion-content>
 	  <div class="tabs-striped tabs-icon-top tabs-color-balanced ">
 	    <div class="tabs ">
