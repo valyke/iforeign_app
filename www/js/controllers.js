@@ -359,10 +359,17 @@ app.controller('signInCtrl', function($scope, $stateParams, $http, $cordovaToast
 
 }) //end controller
 
-app.controller('landingCtrl', function($scope, $stateParams) {
+app.controller('landingCtrl', function($scope, $stateParams, $cordovaNetwork) {
   sessionStorage.setItem('logged_status', false);
   $scope.get_logged_status = sessionStorage.getItem('logged_status');
   console.log('Landing Page Logged Status: '+$scope.get_logged_status);
+  if($cordovaNetwork.isOffline()){ //Toast of no connection if offline
+    $cordovaToast.show('No Internet Connection!', 'long', 'bottom').then(function(success) {
+            console.log("The toast was shown");
+        }, function (error) {
+            console.log("The toast was not shown due to " + error);
+        });
+  }
 })
 
 app.controller('studentProfileCtrl', function($scope, $stateParams, $http, $cordovaToast) {
